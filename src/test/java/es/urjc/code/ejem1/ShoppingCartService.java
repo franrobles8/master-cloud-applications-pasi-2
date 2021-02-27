@@ -12,6 +12,7 @@ import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestMethodOrder;
 import org.modelmapper.ModelMapper;
+import org.springframework.context.ApplicationEventPublisher;
 
 import es.urjc.code.ejem1.domain.FullProductDTO;
 import es.urjc.code.ejem1.domain.FullShoppingCartDTO;
@@ -20,9 +21,9 @@ import es.urjc.code.ejem1.domain.Product;
 import es.urjc.code.ejem1.domain.ProductDTO;
 import es.urjc.code.ejem1.domain.ProductRepository;
 import es.urjc.code.ejem1.domain.ProductServiceImpl;
-import es.urjc.code.ejem1.domain.ShoppingCartExpenditureRepository;
 import es.urjc.code.ejem1.domain.ShoppingCartRepository;
 import es.urjc.code.ejem1.domain.ShoppingCartServiceImpl;
+import es.urjc.code.ejem1.service.CloseShoppingCartServiceImpl;
 import es.urjc.code.ejem1.service.ValidationServiceImpl;
 
 @TestMethodOrder(OrderAnnotation.class)
@@ -34,7 +35,7 @@ public class ShoppingCartService {
 	private ShoppingCartRepository shoppingCartRepository;
 	private ShoppingCartServiceImpl shoppingCartService;
 
-	private ShoppingCartExpenditureRepository shoppingCartExpenditureRepository;
+	private ApplicationEventPublisher applicationEventPublisher;
 
 	private ModelMapper mapper = new ModelMapper();
 	
@@ -44,14 +45,14 @@ public class ShoppingCartService {
 	void setUp() {
 		productRepository = mock(ProductRepository.class);
 		shoppingCartRepository = mock(ShoppingCartRepository.class);
-		shoppingCartExpenditureRepository = mock(ShoppingCartExpenditureRepository.class);
-		
+		applicationEventPublisher = mock(ApplicationEventPublisher.class);
+
 		productService = new ProductServiceImpl(productRepository);
 		shoppingCartService = new ShoppingCartServiceImpl(
 				shoppingCartRepository,
 				productRepository,
-				shoppingCartExpenditureRepository,
-		        new ValidationServiceImpl());
+				new ValidationServiceImpl(),
+				new CloseShoppingCartServiceImpl(applicationEventPublisher));
 	}
 	
 	@Test

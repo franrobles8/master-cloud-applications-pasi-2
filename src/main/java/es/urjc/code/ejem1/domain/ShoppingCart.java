@@ -10,6 +10,7 @@ public class ShoppingCart {
 	private List<ShoppingCartItem> items;
 
 	private ValidationService validationService;
+	private CloseShoppingCartService closeShoppingCartService;
 
 	public ShoppingCart() {
 		super();
@@ -79,6 +80,18 @@ public class ShoppingCart {
 
 			this.status = ShoppingCartStatus.COMPLETED;
 		}
+	}
+
+	public CloseShoppingCartService getCloseShoppingCartService() {
+		return closeShoppingCartService;
+	}
+
+	public void setCloseShoppingCartService(CloseShoppingCartService closeShoppingCartService) {
+		this.closeShoppingCartService = closeShoppingCartService;
+	}
+
+	public void close() {
+		this.closeShoppingCartService.close(new ShoppingCartClosed(this.id, this.getPrice()));
 	}
 
 }
