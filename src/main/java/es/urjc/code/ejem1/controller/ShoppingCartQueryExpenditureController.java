@@ -12,12 +12,12 @@ import es.urjc.code.ejem1.domain.ShoppingCartExpenditureService;
 
 @RestController
 @RequestMapping("/api/cartexpenditure")
-public class ShoppingCartExpenditureController {
+public class ShoppingCartQueryExpenditureController {
 
     ShoppingCartExpenditureService shoppingCartExpenditureService;
     private ModelMapper mapper = new ModelMapper();
 
-    public ShoppingCartExpenditureController(ShoppingCartExpenditureService shoppingCartExpenditureService) {
+    public ShoppingCartQueryExpenditureController(ShoppingCartExpenditureService shoppingCartExpenditureService) {
         this.shoppingCartExpenditureService = shoppingCartExpenditureService;
     }
 

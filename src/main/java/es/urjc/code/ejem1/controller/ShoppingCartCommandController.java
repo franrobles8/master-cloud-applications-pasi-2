@@ -8,7 +8,6 @@ import org.modelmapper.ModelMapper;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -22,18 +21,13 @@ import es.urjc.code.ejem1.domain.ShoppingCartService;
 
 @RestController
 @RequestMapping("/api/shoppingcarts")
-public class ShoppingCartController {
+public class ShoppingCartCommandController {
 
 	private ShoppingCartService shoppingService;
 	private ModelMapper mapper = new ModelMapper();
 
-	public ShoppingCartController(ShoppingCartService shoppingService) {
+	public ShoppingCartCommandController(ShoppingCartService shoppingService) {
 		this.shoppingService = shoppingService;
-	}
-
-	@GetMapping("/{id}")
-	public ShoppingCartResponseDTO getShoppingCart(@PathVariable Long id) {
-		return mapper.map(shoppingService.getShoppingCart(id), ShoppingCartResponseDTO.class);
 	}
 
 	@PostMapping("/{idShoppingCart}/product/{idProduct}/quantity/{quantity}")
