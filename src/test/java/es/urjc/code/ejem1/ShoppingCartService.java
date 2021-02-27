@@ -20,6 +20,7 @@ import es.urjc.code.ejem1.domain.Product;
 import es.urjc.code.ejem1.domain.ProductDTO;
 import es.urjc.code.ejem1.domain.ProductRepository;
 import es.urjc.code.ejem1.domain.ProductServiceImpl;
+import es.urjc.code.ejem1.domain.ShoppingCartExpenditureRepository;
 import es.urjc.code.ejem1.domain.ShoppingCartRepository;
 import es.urjc.code.ejem1.domain.ShoppingCartServiceImpl;
 import es.urjc.code.ejem1.service.ValidationServiceImpl;
@@ -33,6 +34,8 @@ public class ShoppingCartService {
 	private ShoppingCartRepository shoppingCartRepository;
 	private ShoppingCartServiceImpl shoppingCartService;
 
+	private ShoppingCartExpenditureRepository shoppingCartExpenditureRepository;
+
 	private ModelMapper mapper = new ModelMapper();
 	
 	private static FullShoppingCartDTO createdShoppingCart;
@@ -41,11 +44,13 @@ public class ShoppingCartService {
 	void setUp() {
 		productRepository = mock(ProductRepository.class);
 		shoppingCartRepository = mock(ShoppingCartRepository.class);
+		shoppingCartExpenditureRepository = mock(ShoppingCartExpenditureRepository.class);
 		
 		productService = new ProductServiceImpl(productRepository);
 		shoppingCartService = new ShoppingCartServiceImpl(
 				shoppingCartRepository,
-		        productRepository,
+				productRepository,
+				shoppingCartExpenditureRepository,
 		        new ValidationServiceImpl());
 	}
 	

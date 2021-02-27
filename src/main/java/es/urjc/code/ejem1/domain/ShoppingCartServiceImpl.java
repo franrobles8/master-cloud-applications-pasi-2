@@ -6,15 +6,18 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
 
 	private ShoppingCartRepository shoppingCartRepository;
 	private ProductRepository productRepository;
+	private ShoppingCartExpenditureRepository shoppingCartExpenditureRepository;
 	private ValidationService validationService;
 	
 	private ModelMapper mapper = new ModelMapper();
 
 	public ShoppingCartServiceImpl(ShoppingCartRepository shoppingCartRepository,
-	        ProductRepository productRepository,
+			ProductRepository productRepository,
+			ShoppingCartExpenditureRepository shoppingCartExpenditureRepository,
 	        ValidationService validationService) {
 		this.shoppingCartRepository = shoppingCartRepository;
 		this.productRepository = productRepository;
+		this.shoppingCartExpenditureRepository = shoppingCartExpenditureRepository;
 		this.validationService = validationService;
 	}
 	
@@ -48,6 +51,8 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
 		        updateShoppingCart.getStatus() == ShoppingCartStatus.COMPLETED) {
 			shoppingCart.setValidationService(validationService);
 			shoppingCart.validate();
+			shoppingCartExpenditureRepository.save(new ShoppingCartExpenditure(
+				shoppingCart.getId(), shoppingCart.getPrice()));
 		}
 
 		FullShoppingCartDTO newShoppingCartDTO = mapper.map(shoppingCart, FullShoppingCartDTO.class);
