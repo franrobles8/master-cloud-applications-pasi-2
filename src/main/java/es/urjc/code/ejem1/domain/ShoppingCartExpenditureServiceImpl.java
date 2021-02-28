@@ -4,7 +4,7 @@ import java.util.List;
 
 public class ShoppingCartExpenditureServiceImpl implements ShoppingCartExpenditureService {
 
-    ShoppingCartExpenditureRepository shoppingCartExpenditureRepository;
+    private ShoppingCartExpenditureRepository shoppingCartExpenditureRepository;
 
     public ShoppingCartExpenditureServiceImpl(ShoppingCartExpenditureRepository shoppingCartExpenditureRepository) {
         this.shoppingCartExpenditureRepository = shoppingCartExpenditureRepository;

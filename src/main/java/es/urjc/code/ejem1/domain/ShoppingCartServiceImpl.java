@@ -1,6 +1,7 @@
 package es.urjc.code.ejem1.domain;
 
 import org.modelmapper.ModelMapper;
+import org.springframework.context.ApplicationEventPublisher;
 
 public class ShoppingCartServiceImpl implements ShoppingCartService {
 
@@ -8,23 +9,20 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
 	private ProductRepository productRepository;
 	private ValidationService validationService;
 	private CloseShoppingCartService closeShoppingCartService;
+	private final ApplicationEventPublisher applicationEventPublisher;
 	
 	private ModelMapper mapper = new ModelMapper();
 
 	public ShoppingCartServiceImpl(ShoppingCartRepository shoppingCartRepository,
 			ProductRepository productRepository,
 			ValidationService validationService,
-			CloseShoppingCartService closeShoppingCartService) {
+			CloseShoppingCartService closeShoppingCartService,
+			ApplicationEventPublisher applicationEventPublisher) {
 		this.shoppingCartRepository = shoppingCartRepository;
 		this.productRepository = productRepository;
 		this.validationService = validationService;
 		this.closeShoppingCartService = closeShoppingCartService;
-	}
-	
-	private FullShoppingCartDTO saveShoppingCart(FullShoppingCartDTO fullShoppingCartDTO) {
-		FullShoppingCartDTO saveFullShoppingCartDTO = shoppingCartRepository.save(fullShoppingCartDTO);
-
-		return (saveFullShoppingCartDTO != null) ? saveFullShoppingCartDTO : fullShoppingCartDTO;
+		this.applicationEventPublisher = applicationEventPublisher;
 	}
 
 	@Override
@@ -33,15 +31,14 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
 	}
 
 	@Override
-	public FullShoppingCartDTO createShoppingCart() {
+	public void createShoppingCart() {
 		ShoppingCart shoppingCart = new ShoppingCart();
 		FullShoppingCartDTO fullShoppingCartDTO = mapper.map(shoppingCart, FullShoppingCartDTO.class);
-		
-		return saveShoppingCart(fullShoppingCartDTO);
+		this.applicationEventPublisher.publishEvent(mapper.map(fullShoppingCartDTO, ShoppingCartCreated.class));
 	}
 
 	@Override
-	public FullShoppingCartDTO updateShoppingCart(Long id, ShoppingCartDTO shoppingCartDTO) {
+	public void updateShoppingCart(Long id, ShoppingCartDTO shoppingCartDTO) {
 		FullShoppingCartDTO fullShoppingCartDTO = shoppingCartRepository.findById(id);
 
 		ShoppingCart shoppingCart = mapper.map(fullShoppingCartDTO, ShoppingCart.class);
@@ -58,27 +55,29 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
 
 		FullShoppingCartDTO newShoppingCartDTO = mapper.map(shoppingCart, FullShoppingCartDTO.class);
 		
-		return saveShoppingCart(newShoppingCartDTO);
+		this.applicationEventPublisher.publishEvent(mapper.map(newShoppingCartDTO, ShoppingCartUpdated.class));
+
 	}
 
 	@Override
-	public FullShoppingCartDTO deleteShoppingCart(Long id) {
+	public void deleteShoppingCart(Long id) {
 		FullShoppingCartDTO fullShoppingCartDTO = shoppingCartRepository.findById(id);
-		shoppingCartRepository.deleteById(id);
 
-		return fullShoppingCartDTO;
+		this.applicationEventPublisher.publishEvent(mapper.map(fullShoppingCartDTO, ShoppingCartDeleted.class));
+
 	}
 
 	@Override
-	public FullShoppingCartDTO addProduct(Long idShoppingCart, Long idProduct, int quantity) {
+	public void addProduct(Long idShoppingCart, Long idProduct, int quantity) {
 		FullProductDTO fullProductDTO = productRepository.findById(idProduct);
 		FullShoppingCartDTO fullShoppingCartDTO = shoppingCartRepository.findById(idShoppingCart);
 
-		return addProduct(fullProductDTO, fullShoppingCartDTO, quantity);
+		addProduct(fullProductDTO, fullShoppingCartDTO, quantity);
 	}
 
-	public FullShoppingCartDTO addProduct(FullProductDTO fullProductDTO, FullShoppingCartDTO fullShoppingCartDTO,
+	public void addProduct(FullProductDTO fullProductDTO, FullShoppingCartDTO fullShoppingCartDTO,
 	        int quantity) {
+
 		ShoppingCart shoppingCart = mapper.map(fullShoppingCartDTO, ShoppingCart.class);
 		shoppingCart.removeItem(fullProductDTO.getId());
 
@@ -89,11 +88,12 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
 
 		FullShoppingCartDTO newFullProductDTO = mapper.map(shoppingCart, FullShoppingCartDTO.class);
 
-		return saveShoppingCart(newFullProductDTO);
+		this.applicationEventPublisher.publishEvent(mapper.map(newFullProductDTO, ShoppingCartProductAdded.class));
+
 	}
 
 	@Override
-	public FullShoppingCartDTO deleteProduct(Long idShoppingCart, Long idProduct) {
+	public void deleteProduct(Long idShoppingCart, Long idProduct) {
 		FullShoppingCartDTO fullShoppingCartDTO = shoppingCartRepository.findById(idShoppingCart);
 
 		ShoppingCart shoppingCart = mapper.map(fullShoppingCartDTO, ShoppingCart.class);
@@ -101,6 +101,7 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
 
 		FullShoppingCartDTO newFullProductDTO = mapper.map(shoppingCart, FullShoppingCartDTO.class);
 
-		return saveShoppingCart(newFullProductDTO);
+		this.applicationEventPublisher.publishEvent(mapper.map(newFullProductDTO, ShoppingCartProductDeleted.class));
+
 	}
 }

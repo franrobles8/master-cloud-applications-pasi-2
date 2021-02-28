@@ -1,10 +1,7 @@
 package es.urjc.code.ejem1.controller;
 
-import static org.springframework.web.servlet.support.ServletUriComponentsBuilder.fromCurrentRequest;
-
-import java.net.URI;
-
 import org.modelmapper.ModelMapper;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -14,8 +11,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
-import es.urjc.code.ejem1.domain.FullShoppingCartDTO;
 import es.urjc.code.ejem1.domain.ShoppingCartDTO;
 import es.urjc.code.ejem1.domain.ShoppingCartService;
 
@@ -31,45 +26,48 @@ public class ShoppingCartCommandController {
 	}
 
 	@PostMapping("/{idShoppingCart}/product/{idProduct}/quantity/{quantity}")
-	public ShoppingCartResponseDTO getShoppingCart(
+	public ResponseEntity<String> addProductToCart(
 	        @PathVariable Long idShoppingCart,
 	        @PathVariable Long idProduct,
 	        @PathVariable int quantity) {
 
-		return mapper.map(shoppingService.addProduct(idShoppingCart, idProduct, quantity),
-		        ShoppingCartResponseDTO.class);
+		shoppingService.addProduct(idShoppingCart, idProduct, quantity);
+		
+		return new ResponseEntity<>("Product was added to the shopping cart", HttpStatus.OK);
 	}
 
 	@DeleteMapping("/{idShoppingCart}/product/{idProduct}")
-	public ShoppingCartResponseDTO deleteProductInShoppingCart(
+	public ResponseEntity<String> deleteProductInShoppingCart(
 	        @PathVariable Long idShoppingCart,
 	        @PathVariable Long idProduct) {
-		return mapper.map(shoppingService.deleteProduct(idShoppingCart, idProduct), ShoppingCartResponseDTO.class);
+		
+		shoppingService.deleteProduct(idShoppingCart, idProduct);
+
+		return new ResponseEntity<>("Product was deleted from the shopping cart", HttpStatus.OK);
 	}
 
 	@PostMapping
-	public ResponseEntity<ShoppingCartResponseDTO> createShoppingCart() {
-		FullShoppingCartDTO fullShoppingCartDTO = shoppingService.createShoppingCart();
-
-		URI location = fromCurrentRequest().path("/{id}")
-		        .buildAndExpand(fullShoppingCartDTO.getId()).toUri();
-
-		return ResponseEntity.created(location).body(
-		        mapper.map(fullShoppingCartDTO, ShoppingCartResponseDTO.class));
+	public ResponseEntity<String> createShoppingCart() {
+		shoppingService.createShoppingCart();
+		return new ResponseEntity<>("Shopping cart created", HttpStatus.CREATED);
 	}
 
 	@PatchMapping("/{id}")
-	public ShoppingCartResponseDTO updateShoppingCart(
+	public ResponseEntity<String> updateShoppingCart(
 	        @PathVariable Long id,
 	        @Validated @RequestBody ShoppingCartRequestDTO shoppingCartRequestDTO) {
-		FullShoppingCartDTO fullShoppingCartDTO = shoppingService.updateShoppingCart(id,
+		
+		shoppingService.updateShoppingCart(id,
 		        mapper.map(shoppingCartRequestDTO, ShoppingCartDTO.class));
 
-		return mapper.map(fullShoppingCartDTO, ShoppingCartResponseDTO.class);
+		return new ResponseEntity<>("Shopping cart updated", HttpStatus.OK);
 	}
 
 	@DeleteMapping("/{id}")
-	public ShoppingCartResponseDTO deleteShoppingCart(@PathVariable Long id) {
-		return mapper.map(shoppingService.deleteShoppingCart(id), ShoppingCartResponseDTO.class);
+	public ResponseEntity<String> deleteShoppingCart(@PathVariable Long id) {
+
+		shoppingService.deleteShoppingCart(id);
+		
+		return new ResponseEntity<>("Shopping cart deleted", HttpStatus.OK);
 	}
 }

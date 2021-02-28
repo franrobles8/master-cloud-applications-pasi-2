@@ -26,12 +26,14 @@ public class Configuration {
 		        shoppingCartRepositoryAdapter,
 				productRepositoryAdapter,
 				new ValidationServiceImpl(),
-				new CloseShoppingCartServiceImpl(appEventPublisher));
+				new CloseShoppingCartServiceImpl(appEventPublisher),
+				appEventPublisher);
 	}
 
 	@Bean
-	public ProductService productService(SpringDataJPAProductRepositoryAdapter repositoryAdapter) {
-		return new ProductServiceImpl(repositoryAdapter);
+	public ProductService productService(SpringDataJPAProductRepositoryAdapter repositoryAdapter,
+	ApplicationEventPublisher appEventPublisher) {
+		return new ProductServiceImpl(repositoryAdapter, appEventPublisher);
 	}
 
 	@Bean

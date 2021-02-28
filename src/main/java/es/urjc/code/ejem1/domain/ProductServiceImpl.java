@@ -3,14 +3,17 @@ package es.urjc.code.ejem1.domain;
 import java.util.Collection;
 
 import org.modelmapper.ModelMapper;
+import org.springframework.context.ApplicationEventPublisher;
 
 public class ProductServiceImpl implements ProductService {
 
 	private ProductRepository repository;
-	ModelMapper mapper = new ModelMapper();
+	private ModelMapper mapper = new ModelMapper();
+	private final ApplicationEventPublisher applicationEventPublisher;
 
-	public ProductServiceImpl(ProductRepository repository) {
+	public ProductServiceImpl(ProductRepository repository, ApplicationEventPublisher applicationEventPublisher) {
 		this.repository = repository;
+		this.applicationEventPublisher = applicationEventPublisher;
 	}
 
 	@Override
@@ -24,19 +27,15 @@ public class ProductServiceImpl implements ProductService {
 	}
 
 	@Override
-	public FullProductDTO createProduct(ProductDTO productDTO) {
+	public void createProduct(ProductDTO productDTO) {
 		FullProductDTO fullProductDTO = mapper.map(productDTO, FullProductDTO.class);
-		FullProductDTO saveFullProductDTO = repository.save(fullProductDTO);
-
-		return (saveFullProductDTO != null) ? saveFullProductDTO : fullProductDTO;
+		applicationEventPublisher.publishEvent(mapper.map(fullProductDTO, ProductCreated.class));
 	}
 
 	@Override
-	public FullProductDTO deleteProduct(Long id) {
+	public void deleteProduct(Long id) {
 		FullProductDTO product = repository.findById(id);
-		repository.deleteById(id);
-
-		return product;
+		applicationEventPublisher.publishEvent(mapper.map(product, ProductDeleted.class));
 	}
 
 }
