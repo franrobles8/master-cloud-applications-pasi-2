@@ -10,16 +10,16 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import es.urjc.code.ejem1.domain.ProductDTO;
-import es.urjc.code.ejem1.domain.ProductService;
+import es.urjc.code.ejem1.domain.ProductCommandService;
 
 @RestController
 @RequestMapping("/api/products")
 public class ProductCommandController {
 
-	private ProductService productService;
+	private ProductCommandService productService;
 	private ModelMapper mapper = new ModelMapper();
 
-	public ProductCommandController(ProductService productService) {
+	public ProductCommandController(ProductCommandService productService) {
 		this.productService = productService;
 	}
 

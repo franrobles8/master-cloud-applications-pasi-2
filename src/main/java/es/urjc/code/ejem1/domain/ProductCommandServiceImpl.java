@@ -1,29 +1,17 @@
 package es.urjc.code.ejem1.domain;
 
-import java.util.Collection;
-
 import org.modelmapper.ModelMapper;
 import org.springframework.context.ApplicationEventPublisher;
 
-public class ProductServiceImpl implements ProductService {
+public class ProductCommandServiceImpl implements ProductCommandService {
 
 	private ProductRepository repository;
 	private ModelMapper mapper = new ModelMapper();
 	private final ApplicationEventPublisher applicationEventPublisher;
 
-	public ProductServiceImpl(ProductRepository repository, ApplicationEventPublisher applicationEventPublisher) {
+	public ProductCommandServiceImpl(ProductRepository repository, ApplicationEventPublisher applicationEventPublisher) {
 		this.repository = repository;
 		this.applicationEventPublisher = applicationEventPublisher;
-	}
-
-	@Override
-	public Collection<FullProductDTO> getProducts() {
-		return repository.finAll();
-	}
-
-	@Override
-	public FullProductDTO getProduct(Long id) {
-		return repository.findById(id);
 	}
 
 	@Override

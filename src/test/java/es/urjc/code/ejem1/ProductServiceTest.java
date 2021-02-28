@@ -17,12 +17,12 @@ import es.urjc.code.ejem1.domain.ProductCreated;
 import es.urjc.code.ejem1.domain.ProductDTO;
 import es.urjc.code.ejem1.domain.ProductDeleted;
 import es.urjc.code.ejem1.domain.ProductRepository;
-import es.urjc.code.ejem1.domain.ProductServiceImpl;
+import es.urjc.code.ejem1.domain.ProductCommandServiceImpl;
 
 public class ProductServiceTest {
 
 	private ProductRepository productRepository;
-	private ProductServiceImpl productService;
+	private ProductCommandServiceImpl productService;
 	private ApplicationEventPublisher applicationEventPublisher;
 	private ModelMapper mapper = new ModelMapper();
 
@@ -32,7 +32,7 @@ public class ProductServiceTest {
 	void setUp() {
 		productRepository = mock(ProductRepository.class);
 		applicationEventPublisher = mock(ApplicationEventPublisher.class);
-		productService = new ProductServiceImpl(productRepository, applicationEventPublisher);
+		productService = new ProductCommandServiceImpl(productRepository, applicationEventPublisher);
 
 		product = new Product(
 		        "PLUMÍFERO MONTAÑA Y SENDERISMO FORCLAZ TREK100 AZUL CAPUCHA",

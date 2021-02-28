@@ -17,7 +17,7 @@ import es.urjc.code.ejem1.domain.Product;
 import es.urjc.code.ejem1.domain.ProductCreated;
 import es.urjc.code.ejem1.domain.ProductDTO;
 import es.urjc.code.ejem1.domain.ProductRepository;
-import es.urjc.code.ejem1.domain.ProductServiceImpl;
+import es.urjc.code.ejem1.domain.ProductCommandServiceImpl;
 import es.urjc.code.ejem1.domain.ShoppingCart;
 import es.urjc.code.ejem1.domain.ShoppingCartCreated;
 import es.urjc.code.ejem1.domain.ShoppingCartDeleted;
@@ -29,7 +29,7 @@ import es.urjc.code.ejem1.service.ValidationServiceImpl;
 public class ShoppingCartServiceTest {
 	
 	private ProductRepository productRepository;
-	private ProductServiceImpl productService;
+	private ProductCommandServiceImpl productService;
 
 	private ShoppingCartRepository shoppingCartRepository;
 	private ShoppingCartServiceImpl shoppingCartService;
@@ -44,7 +44,7 @@ public class ShoppingCartServiceTest {
 		shoppingCartRepository = mock(ShoppingCartRepository.class);
 		applicationEventPublisher = mock(ApplicationEventPublisher.class);
 
-		productService = new ProductServiceImpl(productRepository, applicationEventPublisher);
+		productService = new ProductCommandServiceImpl(productRepository, applicationEventPublisher);
 		shoppingCartService = new ShoppingCartServiceImpl(
 				shoppingCartRepository,
 				productRepository,
@@ -56,7 +56,7 @@ public class ShoppingCartServiceTest {
 	@Test
 	void shoppingCartCanBeAdded() {
 		shoppingCartService.createShoppingCart();
-		
+
 		verify(applicationEventPublisher).publishEvent(any(ShoppingCartCreated.class));
 	}
 	
