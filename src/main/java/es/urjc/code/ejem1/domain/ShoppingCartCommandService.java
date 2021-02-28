@@ -1,7 +1,6 @@
 package es.urjc.code.ejem1.domain;
 
-public interface ShoppingCartService {
-	public FullShoppingCartDTO getShoppingCart(Long id);
+public interface ShoppingCartCommandService {
 
 	public void createShoppingCart();
 

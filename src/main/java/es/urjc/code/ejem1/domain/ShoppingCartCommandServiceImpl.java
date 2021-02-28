@@ -3,7 +3,7 @@ package es.urjc.code.ejem1.domain;
 import org.modelmapper.ModelMapper;
 import org.springframework.context.ApplicationEventPublisher;
 
-public class ShoppingCartServiceImpl implements ShoppingCartService {
+public class ShoppingCartCommandServiceImpl implements ShoppingCartCommandService {
 
 	private ShoppingCartRepository shoppingCartRepository;
 	private ProductRepository productRepository;
@@ -13,7 +13,7 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
 	
 	private ModelMapper mapper = new ModelMapper();
 
-	public ShoppingCartServiceImpl(ShoppingCartRepository shoppingCartRepository,
+	public ShoppingCartCommandServiceImpl(ShoppingCartRepository shoppingCartRepository,
 			ProductRepository productRepository,
 			ValidationService validationService,
 			CloseShoppingCartService closeShoppingCartService,
@@ -23,11 +23,6 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
 		this.validationService = validationService;
 		this.closeShoppingCartService = closeShoppingCartService;
 		this.applicationEventPublisher = applicationEventPublisher;
-	}
-
-	@Override
-	public FullShoppingCartDTO getShoppingCart(Long id) {
-		return mapper.map(shoppingCartRepository.findById(id), FullShoppingCartDTO.class);
 	}
 
 	@Override

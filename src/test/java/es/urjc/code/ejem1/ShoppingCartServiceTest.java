@@ -4,7 +4,6 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-
 import java.util.Random;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -22,7 +21,7 @@ import es.urjc.code.ejem1.domain.ShoppingCart;
 import es.urjc.code.ejem1.domain.ShoppingCartCreated;
 import es.urjc.code.ejem1.domain.ShoppingCartDeleted;
 import es.urjc.code.ejem1.domain.ShoppingCartRepository;
-import es.urjc.code.ejem1.domain.ShoppingCartServiceImpl;
+import es.urjc.code.ejem1.domain.ShoppingCartCommandServiceImpl;
 import es.urjc.code.ejem1.service.CloseShoppingCartServiceImpl;
 import es.urjc.code.ejem1.service.ValidationServiceImpl;
 
@@ -32,7 +31,7 @@ public class ShoppingCartServiceTest {
 	private ProductCommandServiceImpl productService;
 
 	private ShoppingCartRepository shoppingCartRepository;
-	private ShoppingCartServiceImpl shoppingCartService;
+	private ShoppingCartCommandServiceImpl shoppingCartService;
 
 	private ApplicationEventPublisher applicationEventPublisher;
 
@@ -45,7 +44,7 @@ public class ShoppingCartServiceTest {
 		applicationEventPublisher = mock(ApplicationEventPublisher.class);
 
 		productService = new ProductCommandServiceImpl(productRepository, applicationEventPublisher);
-		shoppingCartService = new ShoppingCartServiceImpl(
+		shoppingCartService = new ShoppingCartCommandServiceImpl(
 				shoppingCartRepository,
 				productRepository,
 				new ValidationServiceImpl(),

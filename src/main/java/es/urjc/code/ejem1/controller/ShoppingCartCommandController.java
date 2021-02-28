@@ -12,16 +12,16 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import es.urjc.code.ejem1.domain.ShoppingCartDTO;
-import es.urjc.code.ejem1.domain.ShoppingCartService;
+import es.urjc.code.ejem1.domain.ShoppingCartCommandService;
 
 @RestController
 @RequestMapping("/api/shoppingcarts")
 public class ShoppingCartCommandController {
 
-	private ShoppingCartService shoppingService;
+	private ShoppingCartCommandService shoppingService;
 	private ModelMapper mapper = new ModelMapper();
 
-	public ShoppingCartCommandController(ShoppingCartService shoppingService) {
+	public ShoppingCartCommandController(ShoppingCartCommandService shoppingService) {
 		this.shoppingService = shoppingService;
 	}
 
@@ -67,7 +67,7 @@ public class ShoppingCartCommandController {
 	public ResponseEntity<String> deleteShoppingCart(@PathVariable Long id) {
 
 		shoppingService.deleteShoppingCart(id);
-		
+
 		return new ResponseEntity<>("Shopping cart deleted", HttpStatus.OK);
 	}
 }

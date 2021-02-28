@@ -9,8 +9,10 @@ import es.urjc.code.ejem1.domain.ProductCommandService;
 import es.urjc.code.ejem1.domain.ProductCommandServiceImpl;
 import es.urjc.code.ejem1.domain.ShoppingCartExpenditureService;
 import es.urjc.code.ejem1.domain.ShoppingCartExpenditureServiceImpl;
-import es.urjc.code.ejem1.domain.ShoppingCartService;
-import es.urjc.code.ejem1.domain.ShoppingCartServiceImpl;
+import es.urjc.code.ejem1.domain.ShoppingCartQueryService;
+import es.urjc.code.ejem1.domain.ShoppingCartQueryServiceImpl;
+import es.urjc.code.ejem1.domain.ShoppingCartCommandService;
+import es.urjc.code.ejem1.domain.ShoppingCartCommandServiceImpl;
 import es.urjc.code.ejem1.infrastructure.SpringDataJPAProductRepositoryAdapter;
 import es.urjc.code.ejem1.infrastructure.SpringDataJPAShoppingCartExpenditureAdapter;
 import es.urjc.code.ejem1.infrastructure.SpringDataJPAShoppingCartRepositoryAdapter;
@@ -21,11 +23,19 @@ import es.urjc.code.ejem1.service.ValidationServiceImpl;
 public class Configuration {
 
 	@Bean
-	public ShoppingCartService shoppingCartService(
+	public ShoppingCartQueryService shoppingCartQueryService(
+	        SpringDataJPAShoppingCartRepositoryAdapter shoppingCartRepositoryAdapter,
+			SpringDataJPAProductRepositoryAdapter productRepositoryAdapter) {
+		return new ShoppingCartQueryServiceImpl(
+		        shoppingCartRepositoryAdapter);
+	}
+
+	@Bean
+	public ShoppingCartCommandService shoppingCartCommandService(
 	        SpringDataJPAShoppingCartRepositoryAdapter shoppingCartRepositoryAdapter,
 			SpringDataJPAProductRepositoryAdapter productRepositoryAdapter,
 			ApplicationEventPublisher appEventPublisher) {
-		return new ShoppingCartServiceImpl(
+		return new ShoppingCartCommandServiceImpl(
 		        shoppingCartRepositoryAdapter,
 				productRepositoryAdapter,
 				new ValidationServiceImpl(),
